@@ -1,0 +1,96 @@
+global:
+  image:
+    tag: 8.2.0
+  identity:
+    auth:
+      # Disable the Identity authentication for local development
+      # it will fall back to basic-auth: demo/demo as default user
+      enabled: false
+
+# Disable identity as part of the camunda platform core
+identity:
+  enabled: false
+
+optimize:
+  enabled: false
+
+# Reduce for Zeebe and Gateway the configured replicas and with that the required resources
+# to get it running locally
+zeebe:
+  clusterSize: 1
+  partitionCount: 1
+  replicationFactor: 1
+  pvcSize: 10Gi
+  nodeSelector:
+    pin: zeebe
+  resources:
+    requests:
+      cpu: '3'
+      memory: '1000Mi'
+    limits:
+      cpu: '3'
+      memory: '1500Mi'
+
+zeebe-gateway:
+  replicas: 1
+  nodeSelector:
+    pin: common
+  resources:
+    limits:
+      cpu: '1'
+      memory: '500Mi'
+
+operate:
+  nodeSelector:
+    pin: common
+  resources:
+    limits:
+      cpu: '1'
+      memory: '500Mi'
+
+tasklist:
+  nodeSelector:
+    pin: common
+  resources:
+    requests:
+      memory: '500Mi'
+    limits:
+      cpu: '1'
+      memory: '500Mi'
+
+connectors:
+  enabled: true
+  inbound:
+    mode: disabled
+  resources:
+    requests:
+      memory: '500Mi'
+    limits:
+      cpu: '1'
+      memory: '500Mi'
+
+# Configure elastic search to make it running for local development
+elasticsearch:
+  imageTag: 7.17.3
+  replicas: 1
+  minimumMasterNodes: 1
+  # Allow no backup for single node setups
+  clusterHealthCheckParams: 'wait_for_status=yellow&timeout=10s'
+  nodeSelector:
+    pin: elastic
+  esJavaOpts: '-Xmx900m -Xms900m'
+  resources:
+    requests:
+      cpu: '3'
+      memory: '1000Mi'
+    limits:
+      cpu: '3'
+      memory: '1500Mi'
+
+  # Request smaller persistent volumes.
+  volumeClaimTemplate:
+    accessModes: ['ReadWriteOnce']
+    storageClassName: 'standard'
+    resources:
+      requests:
+        storage: 15Gi
