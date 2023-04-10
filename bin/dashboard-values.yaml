@@ -1,28 +1,19 @@
-#ingress:
-#  enabled: true
-#  annotations:
-#    kubernetes.io/ingress.class: nginx
-#    kubernetes.io/tls-acme: 'true'
-#    ingress.kubernetes.io/ssl-redirect: 'true'
-#    nginx.ingress.kubernetes.io/secure-backends: 'true'
-#    nginx.ingress.kubernetes.io/backend-protocol: 'HTTPS'
-#  hosts:
-#    - k81s
-#  tls:
-#    - secretName: kubernetes-dashboard-tls
-#      hosts:
-#        - k81s
-#  paths:
-#    - /
-#    - /*
-
 extraArgs:
   - --enable-insecure-login
   - --enable-skip-login
+
 protocolHttp: true
 
 nodeSelector:
   pin: common
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 100Mi
+  limits:
+    cpu: 150m
+    memory: 150Mi
 
 service:
   type: ClusterIP
@@ -34,13 +25,24 @@ service:
 ingress:
   enabled: true
   annotations:
-    kubernetes.io/tls-acme: 'false'
+    nginx.ingress.kubernetes.io/ssl-redirect: 'false'
     nginx.ingress.kubernetes.io/rewrite-target: /$2
   className: nginx
   paths:
     - /dashboard(/|$)(.*)
   hosts:
-    - k81s
+    - k8s2
+
+settings:
+  clusterName: '${CLUSTER}'
+  itemsPerPage: 10
+  logsAutoRefreshTimeInterval: 10
+  resourceAutoRefreshTimeInterval: 10
+  disableAccessDeniedNotifications: false
+
+rbac:
+  clusterReadOnlyRole: true
+  clusterAdminRole: false
 
 metricsScraper:
-  enabled: true
+  enabled: false

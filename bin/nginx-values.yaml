@@ -1,3 +1,2 @@
-controller:
-  nodeSelector:
-    pin: common
+nodeSelector:
+  pin: common
