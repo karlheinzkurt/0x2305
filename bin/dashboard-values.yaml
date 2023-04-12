@@ -29,7 +29,8 @@ ingress:
     nginx.ingress.kubernetes.io/rewrite-target: /$2
   className: nginx
   paths:
-    - /dashboard(/|$)(.*)
+    - /
+    - /*
   hosts:
     - k8s2
 
