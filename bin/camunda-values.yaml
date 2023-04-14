@@ -9,6 +9,8 @@ global:
   ingress:
     enabled: true
     annotations:
+      nginx.org/mergeable-ingress-type: 'minion'
+      nginx.ingress.kubernetes.io/ssl-redirect: 'false'
     className: nginx
     paths:
       - /operate
