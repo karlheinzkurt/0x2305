@@ -47,6 +47,14 @@ zeebe-gateway:
   replicas: 1
   nodeSelector:
     pin: common
+  ingress:
+    enabled: true
+    annotations:
+      nginx.org/mergeable-ingress-type: 'minion'
+      nginx.ingress.kubernetes.io/ssl-redirect: 'false'
+    className: nginx
+    host: k8s2
+    path: /zeebe
   resources:
     limits:
       cpu: '1'
