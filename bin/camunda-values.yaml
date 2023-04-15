@@ -55,10 +55,8 @@ zeebe-gateway:
     className: nginx
     host: k8s2
     path: /zeebe
-  resources:
-    limits:
-      cpu: '1'
-      memory: '500Mi'
+    paths:
+      - /zeebe
 
 operate:
   nodeSelector:
